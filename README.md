@@ -1,5 +1,4 @@
-# PlantGuard
-It is a Mobile AI System for explainable and Multi-disease crop detection.
+# 🌱 PlantGuard: Mobile AI System for Explainable Multi-Disease Crop Detection
 
 # Abstract 
 
@@ -9,4 +8,25 @@ The objectives of PlantGuard are threefold: to detect multiple crop diseases fro
 
 The system is implemented using TensorFlow/Keras for model training, Grad-CAM for explainability, TensorFlow Lite for mobile optimization, and Flutter for cross-platform app development. Offline inference ensures reliability in regions with limited connectivity, while multilingual natural language processing enhances accessibility across diverse communities. In conclusion, PlantGuard delivers accurate, interpretable, and accessible disease detection in a lightweight mobile application. By addressing key shortcomings of existing systems, it empowers farmers with reliable decision-support tools that improve yield management and promote sustainable agriculture.
 
+# 🚀 Innovations & New Features
 
+- 📶 Works Fully Offline
+Unlike many cloud-dependent systems, PlantGuard runs entirely on-device using TensorFlow Lite, making it reliable in rural areas with limited or no internet.
+
+- 🩺 Multi-Disease Detection
+Supports multi-label classification, meaning it can identify more than one disease from a single crop leaf image — a step beyond single-disease models.
+
+- 🧠 Explainable AI (XAI)
+Provides Grad-CAM visualizations that highlight the infected regions of the leaf, helping farmers and researchers understand why the AI made its decision.
+
+- 🌍 Multilingual Support
+Delivers explanations, results, and treatment suggestions in multiple languages, breaking language barriers for diverse farming communities.
+
+- 📈 Disease Progression Forecasting
+Uses synthetic progression modeling to estimate how infections may evolve, helping farmers take preventive measures before critical yield losses occur.
+
+- 📱 Mobile-Optimized AI
+Deploys lightweight CNN models directly into a Flutter mobile app, ensuring smooth performance across devices.
+
+- 👨‍🌾 Farmer-Centric Design
+Focused on accessibility and usability with a clean interface, simple explanations, and practical guidance for real-world agricultural practices.
