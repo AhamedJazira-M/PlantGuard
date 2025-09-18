@@ -1,0 +1,12 @@
+# PlantGuard
+It is a Mobile AI System for explainable and Multi-disease crop detection.
+
+# Abstract 
+
+Agricultural productivity is significantly threatened by crop diseases that reduce yield and directly impact food security. Existing solutions for plant disease detection often face practical limitations, such as dependence on cloud-based computation requiring stable internet, restriction to single-disease classification, and the absence of interpretability in predictions, which makes them less trustworthy for farmers. Moreover, most tools provide generic results in a single language, overlooking accessibility for diverse farming communities. These limitations restrict the adoption and effectiveness of current systems, particularly in rural regions where reliability, transparency, and usability are critical. To address these challenges, this work introduces PlantGuard, Mobile AI system for explainable multi-disease crop detection designed to provide accurate, explainable, and offline crop disease detection.
+
+The objectives of PlantGuard are threefold: to detect multiple crop diseases from a single leaf image using lightweight deep learning models, to generate interpretable outputs through heatmap visualizations that highlight infected regions, and to deliver multilingual, farmer-friendly explanations and treatment recommendations. A multi-label classification pipeline, trained on publicly available datasets such as PlantVillage and Plant Pathology, enables robust detection of co-infections. Additionally, synthetic progression modeling is applied to estimate how infections may evolve over time, supporting preventive decision-making in disease management. By overcoming the limitations of internet dependency, black-box predictions, and language exclusivity, PlantGuard improves both the practicality and adoption potential of AI-based crop disease diagnosis.
+
+The system is implemented using TensorFlow/Keras for model training, Grad-CAM for explainability, TensorFlow Lite for mobile optimization, and Flutter for cross-platform app development. Offline inference ensures reliability in regions with limited connectivity, while multilingual natural language processing enhances accessibility across diverse communities. In conclusion, PlantGuard delivers accurate, interpretable, and accessible disease detection in a lightweight mobile application. By addressing key shortcomings of existing systems, it empowers farmers with reliable decision-support tools that improve yield management and promote sustainable agriculture.
+
+
