@@ -1,0 +1,10 @@
+numpy
+pandas
+matplotlib
+opencv-python
+tensorflow
+tensorflow-lite
+scikit-learn
+seaborn
+flask  # Optional for API/prototype
+pillow
