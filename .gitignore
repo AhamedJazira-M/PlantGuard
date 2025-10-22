@@ -1,0 +1,27 @@
+# 🧠 Virtual environment
+venv/
+
+# 📸 Dataset folders
+data/raw/
+data/processed/
+
+# 🤖 Model weights (keep folder, ignore files)
+models/*.h5
+models/*.tflite
+models/*.ckpt
+
+# 🧹 Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# 📓 Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# 🧾 Logs and temporary files
+logs/
+*.log
+
+# 🖥️ System files
+.DS_Store
+Thumbs.db
