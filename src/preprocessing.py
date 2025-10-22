@@ -47,3 +47,4 @@ print("✅ Preprocessing complete!")
 print(f"Total training batches: {tf.data.experimental.cardinality(train_ds).numpy()}")
 print(f"Total validation batches: {tf.data.experimental.cardinality(val_ds).numpy()}")
 print(f"Classes found: {class_names}")
+#Processed Done
