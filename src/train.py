@@ -1,21 +1,23 @@
+# src/train.py
 import tensorflow as tf
 import os
 
-# Paths
+# ==============================
+# PATHS AND SETTINGS
+# ==============================
 RAW_DATA_DIR = "data/raw"
 MODEL_DIR = "models"
 os.makedirs(MODEL_DIR, exist_ok=True)
 
-# Image and batch settings
 IMAGE_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 15  # you can increase later
+EPOCHS = 15
 SEED = 123
 
-# -------------------------------
-# Load datasets (before applying map/prefetch)
-# -------------------------------
-train_ds_raw = tf.keras.utils.image_dataset_from_directory(
+# ==============================
+# LOAD DATASETS
+# ==============================
+train_ds = tf.keras.utils.image_dataset_from_directory(
     RAW_DATA_DIR,
     validation_split=0.2,
     subset="training",
@@ -24,7 +26,7 @@ train_ds_raw = tf.keras.utils.image_dataset_from_directory(
     batch_size=BATCH_SIZE
 )
 
-val_ds_raw = tf.keras.utils.image_dataset_from_directory(
+val_ds = tf.keras.utils.image_dataset_from_directory(
     RAW_DATA_DIR,
     validation_split=0.2,
     subset="validation",
@@ -33,72 +35,88 @@ val_ds_raw = tf.keras.utils.image_dataset_from_directory(
     batch_size=BATCH_SIZE
 )
 
-# -------------------------------
-# Class names and number of classes
-# -------------------------------
-class_names = train_ds_raw.class_names
+class_names = train_ds.class_names
 NUM_CLASSES = len(class_names)
-print(f"Classes found: {class_names}")
+print(f"✅ Classes found: {class_names}")
 
-# -------------------------------
-# Normalize images
-# -------------------------------
-normalization_layer = tf.keras.layers.Rescaling(1./255)
-train_ds = train_ds_raw.map(lambda x, y: (normalization_layer(x), y))
-val_ds = val_ds_raw.map(lambda x, y: (normalization_layer(x), y))
-
-# -------------------------------
-# Data augmentation (optional but recommended)
-# -------------------------------
+# ==============================
+# DATA AUGMENTATION + NORMALIZATION
+# ==============================
 data_augmentation = tf.keras.Sequential([
     tf.keras.layers.RandomFlip("horizontal_and_vertical"),
     tf.keras.layers.RandomRotation(0.2),
     tf.keras.layers.RandomZoom(0.1)
 ])
-train_ds = train_ds.map(lambda x, y: (data_augmentation(x, training=True), y))
 
-# -------------------------------
-# Prefetch for performance
-# -------------------------------
+# Normalize + prefetch for performance
 AUTOTUNE = tf.data.AUTOTUNE
-train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
-val_ds = val_ds.prefetch(buffer_size=AUTOTUNE)
+train_ds = (
+    train_ds
+    .map(lambda x, y: (data_augmentation(x, training=True), y))
+    .map(lambda x, y: (tf.keras.layers.Rescaling(1./255)(x), y))
+    .cache()
+    .shuffle(1000)
+    .prefetch(buffer_size=AUTOTUNE)
+)
+val_ds = (
+    val_ds
+    .map(lambda x, y: (tf.keras.layers.Rescaling(1./255)(x), y))
+    .cache()
+    .prefetch(buffer_size=AUTOTUNE)
+)
 
-# -------------------------------
-# Build CNN model
-# -------------------------------
+# ==============================
+# BUILD MODEL
+# ==============================
 model = tf.keras.Sequential([
     tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(224,224,3)),
     tf.keras.layers.MaxPooling2D((2,2)),
+
     tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
     tf.keras.layers.MaxPooling2D((2,2)),
+
     tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
     tf.keras.layers.MaxPooling2D((2,2)),
+
     tf.keras.layers.Flatten(),
     tf.keras.layers.Dense(256, activation='relu'),
     tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(NUM_CLASSES, activation='softmax')
 ])
 
-# Compile
 model.compile(
     optimizer='adam',
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy']
 )
 
-# -------------------------------
-# Train the model
-# -------------------------------
+model.summary()
+
+# ==============================
+# CALLBACKS (SAVE BEST MODEL)
+# ==============================
+checkpoint_path = os.path.join(MODEL_DIR, "plantguard_best_model.h5")
+checkpoint = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_path,
+    save_best_only=True,
+    monitor="val_accuracy",
+    mode="max",
+    verbose=1
+)
+
+# ==============================
+# TRAIN MODEL
+# ==============================
 history = model.fit(
     train_ds,
     validation_data=val_ds,
-    epochs=EPOCHS
+    epochs=EPOCHS,
+    callbacks=[checkpoint]
 )
 
-# -------------------------------
-# Save model
-# -------------------------------
-model_path = os.path.join(MODEL_DIR, "plantguard_cnn.h5")
-model.save(model_path)
-print(f"✅ Model saved to {model_path}")
+# ==============================
+# SAVE FINAL MODEL
+# ==============================
+final_model_path = os.path.join(MODEL_DIR, "plantguard_final_model.h5")
+model.save(final_model_path)
+print(f"✅ Training complete! Models saved to:\n- Best: {checkpoint_path}\n- Final: {final_model_path}")
